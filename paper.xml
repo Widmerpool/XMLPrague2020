@@ -129,18 +129,25 @@
         expression matching and checking. This is often the quickest and simplest solution, and it
         can be the best solution for simple structured text examples. Sometimes, though, even quite
         straightforward structured-text grammars can require quite complicated and opaque regular
-        expressions; leading to complex, verbose code which is hard to read and maintain.</para>
-			<para>An Invisible XML approach not only provides validation through successful parsing of the structured text, but also allows validation of specific data and relationships within and between both XML and non-XML structured text. Kosek was able to demonstrate the ability to extend Schematron by including a parser based on the grammar of these paths as an XSLT inclusion, checking both validity via parse-ability:<example>
-					<title>Schematron rule testing SVG Path validity <citation><xref linkend="Kosek2017"/></citation></title>
-					<programlisting>&lt;sch:rule context="svg:path">
+        expressions; leading to complex, verbose code that is hard to read and maintain.</para>
+			<para>An Invisible XML approach not only provides validation through successful parsing of the
+        structured text, it also allows validation of specific data and relationships within and
+        between both XML and non-XML structured text. Kosek was able to demonstrate the ability to
+        extend Schematron by including a parser based on the grammar of these paths as an XSLT
+        inclusion, checking both validity via parsability...<example>
+          <title>Schematron rule testing SVG Path validity <citation><xref linkend="Kosek2017"
+              /></citation></title>
+          <programlisting>&lt;sch:rule context="svg:path">
   &lt;sch:report test="p:parse-svg_path(@d)/
                     self::ERROR">
     &lt;sch:value-of select="p:parse-svg_path(@d)"/>
   &lt;/sch:report>
 &lt;/sch:rule></programlisting>
-				</example>as well as more specific rule constraints, such as ensuring paths are contained within a defined coordinate space:<example>
-					<title>Schematron rule testing path coordinate ranges <citation><xref linkend="Kosek2017"/></citation></title>
-					<programlisting>&lt;sch:rule context="svg:path">
+        </example>...as well as more specific rule constraints, such as ensuring paths are contained
+        within a defined coordinate space:<example>
+          <title>Schematron rule testing path coordinate ranges <citation><xref linkend="Kosek2017"
+              /></citation></title>
+          <programlisting>&lt;sch:rule context="svg:path">
   &lt;sch:let name="path"
            value="p:parse-svg_path(@d)"/>
   &lt;sch:assert
@@ -149,7 +156,7 @@
           satisfies abs(number) le 1000">
   &lt;/sch:assert>
 &lt;/sch:rule></programlisting>
-				</example></para>
+        </example></para>
 			<para>Having the parser available as XSLT therefore empowers developers who use any of the tools in the XSLT toolchain.</para>
     </section>
     <section>
@@ -168,30 +175,44 @@
         therefore the grammar is ambiguous. It is perfectly possible in this case to rewrite the
         grammar so that it's not ambiguous through some clever abstractions, but this means that:<itemizedlist>
           <listitem>
-            <para>using grammars may not be possible without careful editing</para>
+            <para>using grammars may not be possible without careful editing;</para>
           </listitem>
           <listitem>
-            <para>editing of the grammars may not be obvious, straightforward, or result in a
-              concise representation of the underlying concepts</para>
+            <para>editing of the grammars might not be obvious or straightforward, or might not
+              result in a concise representation of the underlying concepts;</para>
           </listitem>
           <listitem>
-            <para>some grammars may not be used at all.</para>
+            <para>some grammars can't be used at all.</para>
           </listitem>
         </itemizedlist></para>
     </section>
     <section>
       <title>The declarative idiom: writing extensible parsers</title>
-      <para>There is another limitation to using the <xref linkend="REx"/>: the parser that it produces is not only an LL1 parser, but it is a parser that is written in a functional, procedural paradigm, rather than the declarative idiom favoured by XSLT.</para>
+      <para>There's another limitation to using the <xref linkend="REx"/>: the parser that it
+        produces is not only an LL1 parser, it's a parser that is written in a functional,
+        procedural paradigm, rather than the declarative idiom favoured by XSLT.</para>
 			<para>The XSLT idiom involves match templates, "apply template" operations and native sequences.  The procedural approach of LL1 parsers involves  passing state objects between functions.  As well as being hard to understand, the latter approach is almost impossible to extend using XSLT's native import and precedence features.</para>
-			<para>Consider a proposed XSLT parser for DTD documents.  It is relatively simple to find an EBNF grammar for the DTD syntax and apply it to a document, but this is unlikely to produce a complete parsed DTD: there is no way for EBNF to convey the meaning of entities and their expansions, and so entities will be treated as just another structure in the parse tree, without parsing any of the data which they represent.  Expanding and including the entities would involve recursive operations on the results of each parse.</para>
-			<para>Better approaches may involve parsing the entities as they are defined, and including the results in the resulting parse tree; doing so would mean extending the generated parser with some bespoke code.  One of the goals of this paper is to establish whether (or not!) it is possible to write a generated parser that would allow extension using the well established XSLT methods of doing so: over-riding templates in including stylesheets, priorities, and use of instructions like <code>xsl:next-match</code> or <code>xsl:apply-imports</code>.</para>
+			<para>Consider a proposed XSLT parser for DTD documents. It's relatively simple to find an EBNF
+        grammar for the DTD syntax and apply it to a document, but this is unlikely to produce a
+        complete parsed DTD: there is no way for EBNF to convey the meaning of entities and their
+        expansions, and so entities will be treated as just another structure in the parse tree,
+        without parsing any of the data which they represent. Expanding and including the entities
+        would involve recursive operations on the results of each parse.</para>
+			<para>Better approaches might involve parsing the entities as they are defined, and including the
+        results in the resulting parse tree. Doing so would mean extending the generated parser with
+        some bespoke code. One of the goals of this paper is to establish whether (or not!) it's
+        possible to write a generated parser that would allow extension using the well established
+        XSLT methods: over-riding templates in including stylesheets, priorities, and use of
+        instructions like <code>xsl:next-match</code> or <code>xsl:apply-imports</code>.</para>
     </section>
     <section>
       <title>The Earley Parser</title>
 			<note>
 				<title>Notes for reviewers</title>
-				<para>This section will include a high level overview of the Earley Parser, including a demonstration of how Earley Items are calculated.</para>
-				<para>It will also review the Earley Tree idea introduced by C M Sperberg-McQueen, and can compare nodes in the tree with the associated Earley Items.</para>
+				<para>This section will include a high-level overview of the Earley Parser, including a
+          demonstration of how Earley Items are calculated.</para>
+				<para>It will also review the Earley Tree idea introduced by C M Sperberg-McQueen, and will
+          compare nodes in the tree with the associated Earley Items.</para>
 			</note>
     </section>
   </section>
